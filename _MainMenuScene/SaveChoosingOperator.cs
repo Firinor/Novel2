@@ -37,7 +37,7 @@ public class SaveChoosingOperator : MonoBehaviour
         }
         else
         {
-            //SaveManager.CreateNewSave(i);
+            //SaveManager.CreateNewSave(i);//
         }
 
         MainMenuManager.SwitchPanels(MenuMarks.baner);
