@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Dialog
 {
-    public class DialogManager : MonoBehaviour
+    public class DialogManager : MonoBehaviour, ISceneController
     {
         [SerializeField]
         private int foregroundSortingOrder;
@@ -37,13 +37,29 @@ namespace Dialog
             cancellationTokenSource.Cancel();
         }
 
-        public static void Options()
-        {
-            sceneManager.SwitchPanelsToOptions();
-        }
         public static void SwithToPuzzle(InformationPackage informationPackage, string additional = "")
         {
             sceneManager.SwithToPuzzle(informationPackage, additional);
+        }
+
+        public void SetAllInstance()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Skip()
+        {
+            dialogOperator.DialogSkip();
+        }
+
+        public void Options()
+        {
+            sceneManager.SwitchPanelsToOptions();
+        }
+
+        public void Exit()
+        {
+            dialogOperator.DialogExit();
         }
     }
 }

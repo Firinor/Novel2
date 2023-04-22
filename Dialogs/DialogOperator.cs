@@ -35,6 +35,8 @@ namespace Dialog
         private static Button backgroundButton => BackgroundHUB.Button;
         private static Image background => BackgroundHUB.Image;
 
+        private DialogManager dialogManager => (DialogManager)DialogHUB.DialogManager;
+
         [SerializeField, NullCheck]
         private Sprite defaultSprite;
 
@@ -460,7 +462,7 @@ namespace Dialog
 
         public void StopDialogSkip() => skipText = false;
         public void DialogSkip() => skipText = true;
-        public void Options() => DialogManager.Options();
+        public void Options() => dialogManager.Options();
         public void DialogExit()
         {
             DialogManager.StopDialog();

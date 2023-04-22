@@ -211,13 +211,10 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
     public static void CheckingTheScene()
     {
         SceneMarks currentScene = instance.currentSceneQueue[instance.currentSceneQueue.Count - 1];
-        if (currentScene == SceneMarks.readingRoom || currentScene == SceneMarks.puzzles)
+        if (currentScene == SceneMarks.readingRoom || currentScene == SceneMarks.puzzles
+            || currentScene == SceneMarks.menu)
         {
-            FindObjectOfType<ReadingRoomManager>().SetAllInstance();
-        }
-        else if (currentScene == SceneMarks.menu)
-        {
-            FindObjectOfType<MainMenuManager>().SetAllInstance();
+            //ISceneController.SetAllInstance();
         }
         else if (currentScene == SceneMarks.findObject
             || currentScene == SceneMarks.tetraQuestion)
@@ -234,8 +231,8 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
     {
         if (!DialogHUB.DialogOperatorCell.isValueNull())
         {
-            DialogOperator dialogOperator = (DialogOperator)DialogHUB.DialogOperator;
-            dialogOperator.DialogSkip();
+            ISceneController dialogOperator = (ISceneController)DialogHUB.DialogOperator;
+            dialogOperator.Skip();
         }
     }
 }

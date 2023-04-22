@@ -17,6 +17,7 @@ namespace Dialog
         private int incidentCount;
 
         private IHelpBook helpBook => (IHelpBook)HelpBookHUB.HelpBookManager;
+        private DialogManager dialogManager => (DialogManager)DialogHUB.DialogManager;
 
         protected new void Awake()
         {
@@ -212,7 +213,7 @@ namespace Dialog
             if (Choices == null || Choices.Count < 1)
             {
                 StopDialogSkip();
-                dialogOperator.DialogExit();
+                dialogManager.Exit();
                 return;
             }
 
