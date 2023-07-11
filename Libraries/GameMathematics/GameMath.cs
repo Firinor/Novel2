@@ -49,6 +49,28 @@ namespace FirMath
             }
             return result;
         }
+
+        //private static List<int> RandomCards(int NumberOfCardsDrawn, int DeckLength)
+        //{
+        //    List<int> cards = new List<int>(new int[DeckLength]);
+        //    int[] result = new int[NumberOfCardsDrawn];
+        //    ShuffleTheCards(cards);
+        //    Array.Copy(cards.ToArray(), result, NumberOfCardsDrawn);
+        //    return ToList(result);
+        //}
+
+        //private static List<int> ToList(int[] source)
+        //{
+        //    List<int> result = new List<int>();
+
+        //    for (int i = 0; i < source.Length; i++)
+        //    {
+        //        result.Add(source[i]);
+        //    }
+
+        //    return result;
+        //}
+
         private static void RemoveDuplicate(List<int> result)
         {
             List<int> check = new List<int>();
