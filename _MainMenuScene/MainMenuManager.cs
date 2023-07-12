@@ -1,6 +1,7 @@
 using FirEnum;
 using System;
 using UnityEngine;
+using Zenject;
 
 public class MainMenuManager : SinglBehaviour<MainMenuManager>, IScenePanel
 {
@@ -8,6 +9,7 @@ public class MainMenuManager : SinglBehaviour<MainMenuManager>, IScenePanel
     private static GameObject credits;
     private static GameObject saves;
 
+    [Inject]
     private MainMenuInformator mainMenuInformator;
 
     void Awake()
@@ -20,12 +22,9 @@ public class MainMenuManager : SinglBehaviour<MainMenuManager>, IScenePanel
         SingletoneCheck(this);//Singltone
         SceneHUB.MenuSceneManagerCell.SetValue(this);
 
-        mainMenuInformator = GetComponent<MainMenuInformator>();
-        mainMenuInformator.SingletoneCheck(mainMenuInformator);
-
-        baner = MainMenuInformator.GetBaner();
-        credits = MainMenuInformator.GetCredits();
-        saves = MainMenuInformator.GetSaves();
+        baner = mainMenuInformator.GetBaner();
+        credits = mainMenuInformator.GetCredits();
+        saves = mainMenuInformator.GetSaves();
     }
 
     public static void SwitchPanels(MenuMarks mark)

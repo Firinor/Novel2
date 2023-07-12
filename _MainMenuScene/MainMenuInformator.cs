@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MainMenuInformator : SinglBehaviour<MainMenuInformator>
+public class MainMenuInformator : MonoBehaviour
 {
     [SerializeField]
     private GameObject baner;
@@ -11,20 +8,19 @@ public class MainMenuInformator : SinglBehaviour<MainMenuInformator>
     private GameObject credits;
     [SerializeField]
     private GameObject saves;
-    private GameObject options;
 
-    public static GameObject GetBaner()
+    public GameObject GetBaner()
     {
-        return instance.baner;
+        return baner;
     }
 
-    public static GameObject GetCredits()
+    public GameObject GetCredits()
     {
-        return instance.credits;
+        return credits;
     }
 
-    public static GameObject GetSaves()
+    public GameObject GetSaves()
     {
-        return instance.saves;
+        return saves;
     }
 }

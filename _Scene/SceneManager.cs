@@ -1,10 +1,9 @@
-using FirUnityEditor;
 using FirEnum;
+using FirUnityEditor;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Dialog;
 
 public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
 {
@@ -21,6 +20,9 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
     {
         get
         {
+            if (instance.currentSceneQueue.Count < 1)
+                return default;
+
             return instance.currentSceneQueue[instance.currentSceneQueue.Count - 1];
         }
     }
