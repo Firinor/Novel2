@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Dialog
 {
-    public class StoryInformator : SinglBehaviour<StoryInformator>
+    public class StoryInformator : MonoBehaviour
     {
         public Characters characters;
         public Backgrounds backgrounds;
@@ -59,11 +59,6 @@ namespace Dialog
             [NullCheck]
             public Sprite[] backgrounds;
             Sprite[] IBackgrounds.Backgrounds => backgrounds;
-        }
-
-        void Awake()
-        {
-            SingletoneCheck(this);
         }
 
         [ContextMenu("ReadFullStory")]

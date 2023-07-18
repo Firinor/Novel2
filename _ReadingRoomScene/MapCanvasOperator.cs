@@ -2,6 +2,7 @@ using FirEnum;
 using FirUnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class MapCanvasOperator : MonoBehaviour
 {
@@ -12,7 +13,11 @@ public class MapCanvasOperator : MonoBehaviour
     
     [SerializeField, NullCheck]
     private Scrollbar horizontalScrollbar;
-    
+
+    [Inject]
+    private SceneManager sceneManager;
+    [Inject]
+    private ReadingRoomManager readingRoomManager;
 
     void Awake()
     {
@@ -20,8 +25,8 @@ public class MapCanvasOperator : MonoBehaviour
         width = viewPort.sizeDelta.x;
     }
 
-    public void Options() => ReadingRoomManager.SwitchPanels(ReadingRoomMarks.options);
-    public void Exit() => SceneManager.SwitchPanel(SceneDirection.exit);
+    public void Options() => readingRoomManager.SwitchPanels(ReadingRoomMarks.options);
+    public void Exit() => sceneManager.SwitchPanel(SceneDirection.exit);
 
     public void CorrectScrollbarPosition(RectTransform dialogButtonRectTransform)
     {

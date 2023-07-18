@@ -2,8 +2,8 @@
     "name": "FirSceneController",
     "rootNamespace": "",
     "references": [
-        "GUID:e418b622699cfa84f8a3b3435ee29cf4",
-        "GUID:15ecd490bed41194790eecbd8b069224"
+        "GUID:15ecd490bed41194790eecbd8b069224",
+        "GUID:2cbe219de9ffee14ba2e6edba45a466a"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

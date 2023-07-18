@@ -1,12 +1,16 @@
 using FirEnum;
 using UnityEngine;
+using Zenject;
 
 public class BanerMenuOperator : MonoBehaviour
 {
-    public void Play() => MainMenuManager.SwitchPanels(MenuMarks.saves);
-    public void Puzzles() => MainMenuManager.SwitchPanels(MenuMarks.puzzles);
-    public void Options() => MainMenuManager.SwitchPanels(MenuMarks.options);
-    public void Credits() => MainMenuManager.SwitchPanels(MenuMarks.credits);
-    public void QuitGame() => MainMenuManager.SwitchPanels(MenuMarks.off);
+    [Inject]
+    private MainMenuManager mainMenuManager;
+
+    public void Play() => mainMenuManager.SwitchPanels(MenuMarks.saves);
+    public void Puzzles() => mainMenuManager.SwitchPanels(MenuMarks.puzzles);
+    public void Options() => mainMenuManager.SwitchPanels(MenuMarks.options);
+    public void Credits() => mainMenuManager.SwitchPanels(MenuMarks.credits);
+    public void QuitGame() => mainMenuManager.SwitchPanels(MenuMarks.off);
 
 }

@@ -7,19 +7,13 @@ using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
 
 
 
-public static class MemoryManager
+public class MemoryManager
 {
-    private static Dictionary<SceneMarks, bool> scenesInGame;
-    private static AsyncOperation operation;
-    private static GIFanimation loadingGIF
-    {
-        get
-        {
-            return BackgroundHUB.LoadingGIF;
-        }
-    }
+    private Dictionary<SceneMarks, bool> scenesInGame;
+    private AsyncOperation operation;
+    private GIFanimation loadingGIF;
 
-    public static void InitializeSceneDictionary(SceneMarks currentScene)
+    public void InitializeSceneDictionary(SceneMarks currentScene)
     {
         scenesInGame = new Dictionary<SceneMarks, bool>();
         
@@ -31,7 +25,7 @@ public static class MemoryManager
         scenesInGame[currentScene] = true;
     }
 
-    public static async Task LoadScene(SceneMarks mark)
+    public async Task LoadScene(SceneMarks mark)
     {
         while(operation != null)
         {
@@ -58,7 +52,7 @@ public static class MemoryManager
         Debug.Log($"End load scene {mark}: at {DateTime.Now}");
     }
 
-    public static async void LoadScenes(SceneMarks[] loadingQueue)
+    public async void LoadScenes(SceneMarks[] loadingQueue)
     {
         loadingGIF.StartAnimation();
 
@@ -70,7 +64,7 @@ public static class MemoryManager
         loadingGIF.StopAnimation();
     }
 
-    public static void UnloadScene(SceneMarks mark)
+    public void UnloadScene(SceneMarks mark)
     {
         if(scenesInGame[mark])
         {
@@ -78,7 +72,7 @@ public static class MemoryManager
         }
     }
 
-    public static bool isSceneIsReady(SceneMarks scene)
+    public bool isSceneIsReady(SceneMarks scene)
     {
         if(scenesInGame == null)
             return false;

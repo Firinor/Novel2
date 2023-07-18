@@ -49,7 +49,8 @@ namespace Puzzle
                         puzzlePackage.Difficulty,
                         puzzleBackground);
             }
-            DialogManager.SwithToPuzzle(sparMapPackage);
+
+            dialogManager.SwithToPuzzle(sparMapPackage);
         }
     }
 }

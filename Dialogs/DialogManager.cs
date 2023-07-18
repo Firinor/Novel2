@@ -1,6 +1,7 @@
 using Puzzle;
 using System.Threading;
 using UnityEngine;
+using Zenject;
 
 namespace Dialog
 {
@@ -11,33 +12,36 @@ namespace Dialog
         [SerializeField]
         private int backgroundSortingOrder;
 
-        private static DialogManager instance => (DialogManager)DialogHUB.DialogManager;
-        private static GameObject dialog => DialogHUB.DialogObject;
-        private static DialogOperator dialogOperator => (DialogOperator)DialogHUB.DialogOperator;
-        private static IReadingSceneManager sceneManager => (IReadingSceneManager)ReadingRoomHUB.ReadingRoomManager;
-        private static Canvas backgroundCanvas => BackgroundHUB.Canvas;
+        [Inject]
+        private GameObject dialog;
+        [Inject]
+        private DialogOperator dialogOperator;
+        [Inject]
+        private IReadingSceneManager sceneManager;
+        [Inject]
+        private Canvas backgroundCanvas;
         
 
-        private static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        public static bool IsCancellationRequested { get => cancellationTokenSource.IsCancellationRequested; }
+        public bool IsCancellationRequested { get => cancellationTokenSource.IsCancellationRequested; }
 
-        public static void ActivateDialog(RectTransform dialogButtonRectTransform)
+        public void ActivateDialog(RectTransform dialogButtonRectTransform)
         {
-            backgroundCanvas.sortingOrder = instance.foregroundSortingOrder;
+            backgroundCanvas.sortingOrder = foregroundSortingOrder;
             //SceneManager.Add
             dialog.SetActive(true);
             cancellationTokenSource = new CancellationTokenSource();
             sceneManager.CheckMap(dialogButtonRectTransform);
         }
 
-        public static void StopDialog()
+        public void StopDialog()
         {
-            backgroundCanvas.sortingOrder = instance.backgroundSortingOrder;
+            backgroundCanvas.sortingOrder = backgroundSortingOrder;
             cancellationTokenSource.Cancel();
         }
 
-        public static void SwithToPuzzle(InformationPackage informationPackage, string additional = "")
+        public void SwithToPuzzle(InformationPackage informationPackage, string additional = "")
         {
             sceneManager.SwithToPuzzle(informationPackage, additional);
         }

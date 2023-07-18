@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using Unity.Mathematics;
+using Zenject;
 
 namespace Puzzle.FindObject
 {
@@ -16,8 +17,12 @@ namespace Puzzle.FindObject
         [SerializeField]
         private int keyIngredientNumber;
 
-        private Camera MainCamera => SceneHUB.Camera;
-        private FindObjectManager puzzleManager => (FindObjectManager)PuzzleHUB.FindObjectManager;
+        [Inject]
+        private Camera MainCamera;
+        [Inject]
+        private FindObjectManager puzzleManager;
+        [Inject]
+        private CanvasManager canvasManager;
 
         private bool drag = false;
         private float timer;
@@ -51,8 +56,8 @@ namespace Puzzle.FindObject
 
         public void ResetOptions()
         {
-            screenHeight = (int)(CanvasManager.ScreenHeight / 2);
-            screenWidth = (int)(CanvasManager.ScreenWidth / 2);
+            screenHeight = (int)(canvasManager.ScreenHeight / 2);
+            screenWidth = (int)(canvasManager.ScreenWidth / 2);
         }
 
         void FixedUpdate()
@@ -89,7 +94,7 @@ namespace Puzzle.FindObject
             image.raycastTarget = false;
             ingredientDrag = true;
             CheckLastPosition();
-            startMousePosition = Input.mousePosition/CanvasManager.ScaleFactor - transform.localPosition;
+            startMousePosition = Input.mousePosition/ canvasManager.ScaleFactor - transform.localPosition;
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 drag = true;
@@ -104,7 +109,7 @@ namespace Puzzle.FindObject
             if (drag && eventData.button == PointerEventData.InputButton.Left)
             {
                 transform.localPosition 
-                    = Input.mousePosition / CanvasManager.ScaleFactor - startMousePosition;
+                    = Input.mousePosition / canvasManager.ScaleFactor - startMousePosition;
             }
         }
         public void OnEndDrag(PointerEventData eventData)
@@ -121,7 +126,7 @@ namespace Puzzle.FindObject
                 }
                 else
                 {
-                    puzzleManager.Particles(Input.mousePosition / CanvasManager.ScaleFactor, success: false);
+                    puzzleManager.Particles(Input.mousePosition / canvasManager.ScaleFactor, success: false);
                     SetRandomImpulse(puzzleManager.ForseToIngredient * ERROR_FORCE, randomForse: false);
                 }
                 return;
@@ -218,7 +223,7 @@ namespace Puzzle.FindObject
         internal void Success()
         {
             puzzleManager.Particles(
-                MainCamera.WorldToScreenPoint(transform.position) / CanvasManager.ScaleFactor,
+                MainCamera.WorldToScreenPoint(transform.position) / canvasManager.ScaleFactor,
                 success: true);
             image.color = Color.white;
         }

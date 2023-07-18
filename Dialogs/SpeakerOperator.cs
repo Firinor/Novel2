@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Dialog
 {
@@ -27,6 +28,9 @@ namespace Dialog
         [SerializeField]
         private bool onBackground;
 
+        [Inject]
+        private DialogOperator dialogOperator;
+
         internal void SetCharacter(CharacterInformator speaker)
         {
             characterInformator = speaker;
@@ -42,7 +46,7 @@ namespace Dialog
         {
             onBackground = true;
             image.color = speakerOnBackgroundColor;
-            imageCanvas.sortingOrder = DialogOperator.OrderLayer + backgroundSortingOrder;
+            imageCanvas.sortingOrder = dialogOperator.OrderLayer + backgroundSortingOrder;
             ScaleUnit();
         }
 
@@ -50,14 +54,14 @@ namespace Dialog
         {
             onBackground = false;
             image.color = Color.white;
-            imageCanvas.sortingOrder = DialogOperator.OrderLayer + foregroundSortingOrder;
+            imageCanvas.sortingOrder = dialogOperator.OrderLayer + foregroundSortingOrder;
             ScaleUnit();
         }
 
         [ContextMenu("ScaleUnit")]
         private void ScaleUnit()
         {
-            float coefficient = DialogOperator.RectTransformHeight / image.preferredHeight;
+            float coefficient = dialogOperator.RectTransformHeight / image.preferredHeight;
             switch (onBackground)
             {
                 case true:

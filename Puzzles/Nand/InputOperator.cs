@@ -3,6 +3,7 @@ using FirUnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Puzzle.Nand
 {
@@ -32,6 +33,9 @@ namespace Puzzle.Nand
 
         private OutputOperator pickedOutput;
 
+        [Inject]
+        private CanvasManager canvasManager;
+
         public bool? GetSignal()
         {
             if(pickedOutput == null)
@@ -51,7 +55,7 @@ namespace Puzzle.Nand
 
         public void OnDrag(PointerEventData eventData)
         {
-            line.SetPosition(1, ((Vector2)Input.mousePosition - basePosition) / CanvasManager.ScaleFactor);
+            line.SetPosition(1, ((Vector2)Input.mousePosition - basePosition) / canvasManager.ScaleFactor);
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -103,7 +107,7 @@ namespace Puzzle.Nand
             Vector2 thisTransformPoint = GameTransform.GetGlobalPoint(transform);
             Vector2 connectPoint = pickedOutput.ConnectPoint;
             line.SetPosition(1, 
-                ((outputTransformPoint - thisTransformPoint)/ CanvasManager.ScaleFactor) + connectPoint
+                ((outputTransformPoint - thisTransformPoint)/ canvasManager.ScaleFactor) + connectPoint
                 );
         }
 

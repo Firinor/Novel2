@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zenject;
 
 namespace FirDragAndDrop
 {
@@ -18,6 +19,9 @@ namespace FirDragAndDrop
 
         private Vector3 startMousePosition;
 
+        [Inject]
+        private CanvasManager canvasManager;
+
         public void Start()
         {
             if(dragAndDropObject == null)
@@ -34,7 +38,7 @@ namespace FirDragAndDrop
         public void OnBeginDrag(PointerEventData eventData)
         {
             image.raycastTarget = false;
-            startMousePosition = Input.mousePosition / CanvasManager.ScaleFactor - transform.localPosition;
+            startMousePosition = Input.mousePosition / canvasManager.ScaleFactor - transform.localPosition;
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 drag = true;
@@ -49,7 +53,7 @@ namespace FirDragAndDrop
             if (drag && eventData.button == PointerEventData.InputButton.Left)
             {
                 transform.localPosition
-                    = Input.mousePosition / CanvasManager.ScaleFactor - startMousePosition;
+                    = Input.mousePosition / canvasManager.ScaleFactor - startMousePosition;
             }
         }
         public void OnEndDrag(PointerEventData eventData)

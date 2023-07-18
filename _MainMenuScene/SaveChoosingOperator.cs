@@ -2,9 +2,15 @@ using FirEnum;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class SaveChoosingOperator : MonoBehaviour
 {
+    [Inject]
+    private SceneManager sceneManager;
+    [Inject]
+    private MainMenuManager mainMenuManager;
+
     [SerializeField]
     private SaveManager saveManager;
     [SerializeField]
@@ -25,7 +31,7 @@ public class SaveChoosingOperator : MonoBehaviour
 
     public void Return()
     {
-        MainMenuManager.SwitchPanels(MenuMarks.baner);
+        mainMenuManager.SwitchPanels(MenuMarks.baner);
     }
 
     public void LoadSave(int i)
@@ -40,8 +46,8 @@ public class SaveChoosingOperator : MonoBehaviour
             //SaveManager.CreateNewSave(i);//
         }
 
-        MainMenuManager.SwitchPanels(MenuMarks.baner);
-        SceneManager.LoadScene(SceneMarks.readingRoom);
+        mainMenuManager.SwitchPanels(MenuMarks.baner);
+        sceneManager.LoadScene(SceneMarks.readingRoom);
     }
 
     private void DisableAllJars()

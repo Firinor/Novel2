@@ -9,50 +9,51 @@ using Puzzle.SearchObjects;
 using Puzzle.BossBattle;
 using Puzzle.PortalBuild;
 using FirEnum;
+using Zenject;
+using Dialog;
 
-public class ReadingRoomManager : SinglBehaviour<ReadingRoomManager>, IScenePanel, IReadingSceneManager
+public class ReadingRoomManager : MonoBehaviour, IScenePanel, IReadingSceneManager
 {
     #region Instances
-    private static GameObject dialog => DialogHUB.DialogObject;
-    private static GameObject puzzleFindObject => PuzzleHUB.FindObject;
-    private static GameObject puzzleTetraQuestion => PuzzleHUB.TetraQuestion;
-    private static GameObject puzzleFindDifference => PuzzleHUB.FindDifference;
-    private static GameObject puzzleSearchObjects => PuzzleHUB.SearchObjects;
-    private static GameObject puzzleSpectralAnalysis => PuzzleHUB.SpectralAnalysis;
-    private static GameObject puzzleStarMap => PuzzleHUB.StarMap;
-    private static GameObject puzzleBossBattle => PuzzleHUB.BossBattle;
-
-    private static FindObjectManager puzzleFindObjectManager => (FindObjectManager)PuzzleHUB.FindObjectManager;
-    private static TetraQuestionManager puzzleTetraQuestionManager => (TetraQuestionManager)PuzzleHUB.TetraQuestionManager;
-    private static FindDifferencesManager puzzleFindDifferencesManager => (FindDifferencesManager)PuzzleHUB.FindDifferencesManager;
-    private static SearchObjectsManager puzzleSearchObjectsManager => (SearchObjectsManager)PuzzleHUB.SearchObjectsManager;
-    private static SpectralAnalysisManager puzzleSpectralAnalysisManager => (SpectralAnalysisManager)PuzzleHUB.SpectralAnalysisManager;
-    private static StarMapManager puzzleStarMapManager => (StarMapManager)PuzzleHUB.StarMapManager;
-    private static BossBattleManager puzzleBossBattleManager => (BossBattleManager)PuzzleHUB.BossBattleManager;
-    private static MapCanvasOperator mapCanvasOperator => (MapCanvasOperator)ReadingRoomHUB.MapCanvasOperator;
+    [Inject]
+    private static FindObjectManager puzzleFindObjectManager;
+    [Inject]
+    private static TetraQuestionManager puzzleTetraQuestionManager;
+    [Inject]
+    private static FindDifferencesManager puzzleFindDifferencesManager;
+    [Inject]
+    private static SearchObjectsManager puzzleSearchObjectsManager;
+    [Inject]
+    private static SpectralAnalysisManager puzzleSpectralAnalysisManager;
+    [Inject]
+    private static StarMapManager puzzleStarMapManager;
+    [Inject]
+    private static BossBattleManager puzzleBossBattleManager;
+    [Inject]
+    private static MapCanvasOperator mapCanvasOperator;
     #endregion
 
     //private CanvasManager canvasManager;
+    [Inject]
+    private SceneManager sceneManager;
+    [Inject]
+    private DialogManager dialogManager;
+    [Inject]
+    private MemoryManager memoryManager;
 
     void Awake()
     {
-        if(!(SceneManager.CurrentScene == SceneMarks.readingRoom
-            || SceneManager.CurrentScene == SceneMarks.puzzles))
+        if(!(sceneManager.CurrentScene == SceneMarks.readingRoom
+            || sceneManager.CurrentScene == SceneMarks.puzzles))
         {
             gameObject.SetActive(false);
         }
     }
 
-    public void SetAllInstance()
-    {
-        SingletoneCheck(this);
-        SceneHUB.ReadingRoomSceneManagerCell.SetValue(this);
-    }
-
-    public static void SwitchPanels(ReadingRoomMarks mark)
+    public void SwitchPanels(ReadingRoomMarks mark)
     {
         if(mark != ReadingRoomMarks.options)
-            instance.DiactiveAllPanels();
+            DiactiveAllPanels();
 
         switch (mark)
         {
@@ -60,31 +61,31 @@ public class ReadingRoomManager : SinglBehaviour<ReadingRoomManager>, IScenePane
                 //map.SetActive(true);
                 break;
             case ReadingRoomMarks.dialog:
-                dialog.SetActive(true);
+                dialogManager.gameObject.SetActive(true);
                 break;
             case ReadingRoomMarks.puzzleFindObject:
-                puzzleFindObject.SetActive(true);
+                puzzleFindObjectManager.gameObject.SetActive(true);
                 break;
             case ReadingRoomMarks.puzzleTetraQuestion:
-                puzzleTetraQuestion.SetActive(true);
+                puzzleTetraQuestionManager.gameObject.SetActive(true);
                 break;
             case ReadingRoomMarks.puzzleFindDifferences:
-                puzzleFindDifference.SetActive(true);
+                puzzleFindDifferencesManager.gameObject.SetActive(true);
                 break;
             case ReadingRoomMarks.puzzleSearchObjects:
-                puzzleSearchObjects.SetActive(true);
+                puzzleSearchObjectsManager.gameObject.SetActive(true);
                 break;
             case ReadingRoomMarks.puzzleSpectralAnalysis:
-                puzzleSpectralAnalysis.SetActive(true);
+                puzzleSpectralAnalysisManager.gameObject.SetActive(true);
                 break;
             case ReadingRoomMarks.puzzleStarMap:
-                puzzleStarMap.SetActive(true);
+                puzzleStarMapManager.gameObject.SetActive(true);
                 break;
             case ReadingRoomMarks.puzzleBossBattle:
-                puzzleStarMap.SetActive(true);
+                puzzleStarMapManager.gameObject.SetActive(true);
                 break;
             case ReadingRoomMarks.options:
-                SceneManager.SwitchPanel(SceneDirection.options);
+                sceneManager.SwitchPanel(SceneDirection.options);
                 break;
             case ReadingRoomMarks.off:
                 break;
@@ -105,8 +106,8 @@ public class ReadingRoomManager : SinglBehaviour<ReadingRoomManager>, IScenePane
     public void DiactiveAllPanels()
     {
         //map.SetActive(false);
-        dialog.SetActive(false);
-        GameObject[] puzzles = PuzzleHUB.GetNotNullPuzzles();
+        dialogManager.gameObject.SetActive(false);
+        GameObject[] puzzles = GetNotNullPuzzles();
         for (int i = 0; i < puzzles.Length; i++)
         {
             puzzles[i].SetActive(false);
@@ -118,7 +119,12 @@ public class ReadingRoomManager : SinglBehaviour<ReadingRoomManager>, IScenePane
         //puzzleSpectralAnalysis.SetActive(false);
         //puzzleStarMap.SetActive(false);
         //puzzleBossBattle.SetActive(false);
-        SceneManager.DiactiveAllPanels();
+        sceneManager.DiactiveAllPanels();
+    }
+
+    private GameObject[] GetNotNullPuzzles()
+    {
+        throw new NotImplementedException();
     }
 
     public void BasicPanelSettings()
@@ -136,7 +142,7 @@ public class ReadingRoomManager : SinglBehaviour<ReadingRoomManager>, IScenePane
         switch (puzzleInformationPackage)
         {
             case FindRecipeIngredientsPackage findRecipeIngredients:
-                await MemoryManager.LoadScene(SceneMarks.findObject);
+                await memoryManager.LoadScene(SceneMarks.findObject);
                 puzzleFindObjectManager.SetPuzzleInformationPackage(findRecipeIngredients);
                 SwitchPanels(ReadingRoomMarks.puzzleFindObject);
                 break;

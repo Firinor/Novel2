@@ -1,7 +1,7 @@
 using FirEnum;
 using FirStory;
-using HelpBook;
 using UnityEngine;
+using Zenject;
 
 namespace Dialog
 {
@@ -16,13 +16,15 @@ namespace Dialog
         private int incidentIndex;
         private int incidentCount;
 
-        private IHelpBook helpBook => (IHelpBook)HelpBookHUB.HelpBookManager;
-        private DialogManager dialogManager => (DialogManager)DialogHUB.DialogManager;
+        [Inject]
+        private IHelpBook helpBook;
+        [Inject]
+        private StoryInformator storyInformator;
 
         protected new void Awake()
         {
             base.Awake();
-            episode = StoryInformator.instance.GetScene(Act, Scene);
+            episode = storyInformator.GetScene(Act, Scene);
             incidentCount = episode.Count;
         }
 
@@ -50,11 +52,11 @@ namespace Dialog
                 {
                     await dialogOperator.AwaitPlayerInput();
                 }
-                else if (episode[incidentIndex].Function == StoryInformator.instance.characters.Narrator)
+                else if (episode[incidentIndex].Function == storyInformator.characters.Narrator)
                 {
                     await dialogOperator.NarratorText(episode[incidentIndex].Text);
                 }
-                else if (episode[incidentIndex].Function == StoryInformator.instance.characters.Silently)
+                else if (episode[incidentIndex].Function == storyInformator.characters.Silently)
                 {
                     await dialogOperator.Say(episode[incidentIndex].Text);
                 }
@@ -204,7 +206,7 @@ namespace Dialog
 
         public void Fork()
         {
-            if (DialogManager.IsCancellationRequested)
+            if (dialogManager.IsCancellationRequested)
             {
                 StopDialogSkip();
                 return;
@@ -234,7 +236,7 @@ namespace Dialog
         public override void ResetGameObject()
         {
             base.ResetGameObject();
-            episode = FindObjectOfType<StoryInformator>().GetScene(Act, Scene);
+            episode = storyInformator.GetScene(Act, Scene);
             //Choices = new List<DialogNode>();
             for (int i = 0; i < episode.Choices.Count - Choices.Count; i++)
             {

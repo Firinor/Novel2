@@ -47,7 +47,7 @@ namespace Puzzle
                     puzzleBackground);
             }
 
-            DialogManager.SwithToPuzzle(puzzleTetraQuestionPackage);
+            dialogManager.SwithToPuzzle(puzzleTetraQuestionPackage);
         }
     }
 }

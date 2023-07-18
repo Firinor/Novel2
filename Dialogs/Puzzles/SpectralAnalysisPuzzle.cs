@@ -55,7 +55,8 @@ namespace Puzzle
                         puzzlePackage.AllottedTime,
                         puzzleBackground);
             }
-            DialogManager.SwithToPuzzle(spectralAnalysisPackage);
+
+            dialogManager.SwithToPuzzle(spectralAnalysisPackage);
         }
     }
 }

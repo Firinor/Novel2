@@ -53,7 +53,7 @@ namespace Puzzle
                     puzzleBackground);
             }
 
-            DialogManager.SwithToPuzzle(puzzleFindDifferencePackage);
+            dialogManager.SwithToPuzzle(puzzleFindDifferencePackage);
         }
     }
 }

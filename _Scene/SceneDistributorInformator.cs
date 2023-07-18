@@ -1,5 +1,6 @@
 using FirEnum;
 using UnityEngine;
+using Zenject;
 
 public class SceneDistributorInformator : MonoBehaviour
 {
@@ -16,17 +17,18 @@ public class SceneDistributorInformator : MonoBehaviour
     //[SerializeField]
     //private MonoBehaviour informatorAwake;
 
+    [Inject]
+    private SceneManager sceneManager;
+
     void Awake()
     {
-        if(SceneManager.instance == null)
+        if(sceneManager == null)
             gameObject.transform.SetParent(fallbackTransform);
         else
         {
-            SceneManager.SetSceneToPosition(gameObject, scenePosition);
-            SceneManager.SetSceneObject(thisSceneMark, thisGameObject);
+            sceneManager.SetSceneToPosition(gameObject, scenePosition);
+            sceneManager.SetSceneObject(thisSceneMark, thisGameObject);
         }
-
-        //informator11Awake.
 
         if (!isEnable)
         {

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 using Image = UnityEngine.UI.Image;
 
 namespace Dialog
@@ -30,12 +31,14 @@ namespace Dialog
         [SerializeField, NullCheck]
         private RectTransform rectTransform;
 
-        private static DialogOperator instance => (DialogOperator)DialogHUB.DialogOperator;
-        private static Canvas canvas => DialogHUB.Canvas;
-        private static Button backgroundButton => BackgroundHUB.Button;
-        private static Image background => BackgroundHUB.Image;
-
-        private DialogManager dialogManager => (DialogManager)DialogHUB.DialogManager;
+        [Inject]
+        private Canvas canvas;
+        [Inject]
+        private Button backgroundButton;
+        [Inject]
+        private Image background;
+        [Inject]
+        private DialogManager dialogManager;
 
         [SerializeField, NullCheck]
         private Sprite defaultSprite;
@@ -83,11 +86,11 @@ namespace Dialog
         private static bool nextInput;
 
         public static void NextInput() => nextInput = true;
-        public static float RectTransformHeight { get { return instance.rectTransform.rect.height; } }
-        public static int OrderLayer { get { return canvas.sortingOrder; } }
-        public static GameObject Left { get { return instance.leftSpeaker; } }
-        public static GameObject Center { get { return instance.centerSpeaker; } }
-        public static GameObject Right { get { return instance.rightSpeaker; } }
+        public float RectTransformHeight { get { return rectTransform.rect.height; } }
+        public int OrderLayer { get { return canvas.sortingOrder; } }
+        public GameObject Left { get { return leftSpeaker; } }
+        public GameObject Center { get { return centerSpeaker; } }
+        public GameObject Right { get { return rightSpeaker; } }
         #endregion
 
         #region Monobehaviour
@@ -188,7 +191,7 @@ namespace Dialog
                         i = PrintableText[textPart].Length + fullLineDelay;
                         nextInput = false;
                     }
-                    if (DialogManager.IsCancellationRequested)
+                    if (dialogManager.IsCancellationRequested)
                         break;
                     if (SwichLanguage)
                     {
@@ -213,7 +216,7 @@ namespace Dialog
                         string[] newText = TextByLanguage(text, textComponentCapacity);
                         textComponent.text = newText[newText.Length - 1];
                     }
-                    if (DialogManager.IsCancellationRequested)
+                    if (dialogManager.IsCancellationRequested)
                         break;
                     await Task.Yield();
                 }
@@ -242,7 +245,7 @@ namespace Dialog
         #region Speakers
         public Task Say(CharacterInformator character, MultiText text)
         {
-            if (DialogManager.IsCancellationRequested)
+            if (dialogManager.IsCancellationRequested)
                 return Task.CompletedTask;
 
             SetPlaqueName(character);
@@ -251,7 +254,7 @@ namespace Dialog
         }
         public Task Say(MultiText text)
         {
-            if (DialogManager.IsCancellationRequested)
+            if (dialogManager.IsCancellationRequested)
                 return Task.CompletedTask;
 
             SetPlaqueName();
@@ -259,7 +262,7 @@ namespace Dialog
         }
         private Task PrintText(MultiText text)
         {
-            if (DialogManager.IsCancellationRequested)
+            if (dialogManager.IsCancellationRequested)
                 return Task.CompletedTask;
 
             return PrintText(text, senterScreen: false);
@@ -402,12 +405,12 @@ namespace Dialog
         #endregion
 
         #region Background
-        public void SetBackground(Sprite background)
+        public void SetBackground(Sprite _background)
         {
-            if (background != null)
+            if (_background != null)
             {
-                DialogOperator.background.enabled = true;
-                DialogOperator.background.sprite = background;
+                background.enabled = true;
+                background.sprite = _background;
             }
 
         }
@@ -422,7 +425,7 @@ namespace Dialog
                 if (skipText)
                     break;
 
-                if (DialogManager.IsCancellationRequested)
+                if (dialogManager.IsCancellationRequested)
                     break;
 
                 await Task.Yield();
@@ -465,7 +468,7 @@ namespace Dialog
         public void Options() => dialogManager.Options();
         public void DialogExit()
         {
-            DialogManager.StopDialog();
+            dialogManager.StopDialog();
             OffBackground();
             gameObject.SetActive(false);
         }

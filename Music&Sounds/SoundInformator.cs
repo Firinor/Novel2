@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundInformator : SinglBehaviour<SoundInformator>
+public class SoundInformator : MonoBehaviour
 {
     [SerializeField]
     private AudioClip backgroundMusic;
@@ -22,7 +22,6 @@ public class SoundInformator : SinglBehaviour<SoundInformator>
 
     void Awake()
     {
-        SingletoneCheck(this);
         GlobalUIAudioSource = GetComponent<AudioSource>();
 
         AudioSourceOperator[] AudioOperators = FindObjectsOfType<AudioSourceOperator>(true);
@@ -44,7 +43,7 @@ public class SoundInformator : SinglBehaviour<SoundInformator>
         }
     }
 
-    public static List<AudioClip> GetClips(AudioType type)
+    public List<AudioClip> GetClips(AudioType type)
     {
         switch (type)
         {
@@ -56,27 +55,27 @@ public class SoundInformator : SinglBehaviour<SoundInformator>
         return new List<AudioClip>();
     }
 
-    public static List<AudioSourceOperator> GetBackgroundOperators()
+    public List<AudioSourceOperator> GetBackgroundOperators()
     {
-        return instance.backgroundMusicSource;
+        return backgroundMusicSource;
     }
 
-    public static List<AudioSourceOperator> GetButtonsOperators()
+    public List<AudioSourceOperator> GetButtonsOperators()
     {
-        return instance.buttonsSource;
+        return buttonsSource;
     }
 
-    public static List<AudioClip> GetBackgroundMusic()
+    public List<AudioClip> GetBackgroundMusic()
     {
-        return new List<AudioClip>() { instance.backgroundMusic };
+        return new List<AudioClip>() { backgroundMusic };
     }
 
-    public static List<AudioClip> GetButtonsMusic()
+    public List<AudioClip> GetButtonsMusic()
     {
         return new List<AudioClip>() {
-        instance.buttonOnMouseEnter,
-        instance.buttonOnMouseExit,
-        instance.buttonOnClic };
+        buttonOnMouseEnter,
+        buttonOnMouseExit,
+        buttonOnClic };
     }
 }
 

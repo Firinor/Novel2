@@ -56,7 +56,7 @@ namespace Puzzle
                     puzzleBackground);
             }
 
-            DialogManager.SwithToPuzzle(puzzleFindRecipeIngredientsPackage);
+            dialogManager.SwithToPuzzle(puzzleFindRecipeIngredientsPackage);
         }
     }
 }

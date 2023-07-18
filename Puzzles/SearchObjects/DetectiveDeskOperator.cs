@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Puzzle.SearchObjects
 {
@@ -48,6 +49,9 @@ namespace Puzzle.SearchObjects
         [SerializeField]
         private float screenHeightRatio = 0.9f;
 
+        [Inject]
+        private CanvasManager canvasManager;
+
         public void DisableButton()
         {
             ButtonStatus(false);
@@ -78,8 +82,8 @@ namespace Puzzle.SearchObjects
 
             Sprite mainSprite = imageWithDifferences.Sprite;
 
-            float canvas_x = CanvasManager.ScreenWidth * screenWidthRatio;
-            float canvas_y = CanvasManager.ScreenHeight * screenHeightRatio;
+            float canvas_x = canvasManager.ScreenWidth * screenWidthRatio;
+            float canvas_y = canvasManager.ScreenHeight * screenHeightRatio;
 
             float image_x = mainSprite.textureRect.width;
             float image_y = mainSprite.textureRect.height;

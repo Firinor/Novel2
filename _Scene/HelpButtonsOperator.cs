@@ -1,19 +1,23 @@
 using UnityEngine;
+using Zenject;
 
 public class HelpButtonsOperator : MonoBehaviour
 {
+    [Inject]
+    private SceneManager sceneManager;
+
     public void SkipButton()
     {
-        SceneManager.SkipButton();
+        sceneManager.SkipButton();
     }
 
     public void OptionsButton()
     {
-        SceneManager.SwitchPanel(SceneDirection.options);
+        sceneManager.SwitchPanel(SceneDirection.options);
     }
 
     public void ExitButton()
     {
-        SceneManager.SwitchPanel(SceneDirection.exit);
+        sceneManager.SwitchPanel(SceneDirection.exit);
     }
 }

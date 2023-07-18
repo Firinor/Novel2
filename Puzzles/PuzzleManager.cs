@@ -1,19 +1,14 @@
 ﻿using FirUnityEditor;
 using UnityEngine;
 
-public class PuzzleManager : SinglBehaviour<PuzzleManager>
+public class PuzzleManager : MonoBehaviour
 {
     [SerializeField, NullCheck]
     private IPuzzleSceneManager sceneManager;
 
-    void Awake()
+    public void Options()
     {
-        SingletoneCheck(this);
-    }
-
-    public static void Options()
-    {
-        instance.sceneManager.SwitchPanelsToOptions();
+        sceneManager.SwitchPanelsToOptions();
     }
 }
 

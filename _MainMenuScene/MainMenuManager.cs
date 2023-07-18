@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using Zenject;
 
-public class MainMenuManager : SinglBehaviour<MainMenuManager>, IScenePanel
+public class MainMenuManager : MonoBehaviour, IScenePanel
 {
     private static GameObject baner;
     private static GameObject credits;
@@ -11,26 +11,26 @@ public class MainMenuManager : SinglBehaviour<MainMenuManager>, IScenePanel
 
     [Inject]
     private MainMenuInformator mainMenuInformator;
+    [Inject]
+    private SceneManager sceneManager;
 
     void Awake()
     {
-        SingletoneCheck(this);
         SetAllInstance();
     }
     public void SetAllInstance()
     {
-        SingletoneCheck(this);//Singltone
-        SceneHUB.MenuSceneManagerCell.SetValue(this);
+        //SceneHUB.MenuSceneManagerCell.SetValue(this);
 
         baner = mainMenuInformator.GetBaner();
         credits = mainMenuInformator.GetCredits();
         saves = mainMenuInformator.GetSaves();
     }
 
-    public static void SwitchPanels(MenuMarks mark)
+    public void SwitchPanels(MenuMarks mark)
     {
         if(mark != MenuMarks.options && mark != MenuMarks.off)
-            instance.DiactiveAllPanels();
+            DiactiveAllPanels();
         switch (mark)
         {
             case MenuMarks.baner:
@@ -46,10 +46,10 @@ public class MainMenuManager : SinglBehaviour<MainMenuManager>, IScenePanel
                 saves.SetActive(true);
                 break;
             case MenuMarks.options:
-                SceneManager.SwitchPanel(SceneDirection.options);
+                sceneManager.SwitchPanel(SceneDirection.options);
                 break;
             case MenuMarks.off:
-                SceneManager.SwitchPanel(SceneDirection.exit);
+                sceneManager.SwitchPanel(SceneDirection.exit);
                 break;
             default:
                 new Exception("Unrealized bookmark!");
@@ -67,7 +67,7 @@ public class MainMenuManager : SinglBehaviour<MainMenuManager>, IScenePanel
         baner.SetActive(false);
         credits.SetActive(false);
         saves.SetActive(false);
-        SceneManager.DiactiveAllPanels();
+        sceneManager.DiactiveAllPanels();
     }
 
     public void BasicPanelSettings()

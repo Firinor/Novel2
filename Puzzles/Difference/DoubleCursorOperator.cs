@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public enum CursorOnEvidence { left = -1, right = 1 }
 
@@ -21,9 +22,12 @@ namespace Puzzle.FindDifferences
         [HideInInspector]
         public CursorOnEvidence cursorOnEvidence;
 
+        [Inject]
+        private CanvasManager canvasManager;
+
         public void MoveCursor()
         {
-            Vector3 mousePosition = Input.mousePosition / CanvasManager.ScaleFactor;
+            Vector3 mousePosition = Input.mousePosition / canvasManager.ScaleFactor;
             switch (cursorOnEvidence)
             {
                 case CursorOnEvidence.left:

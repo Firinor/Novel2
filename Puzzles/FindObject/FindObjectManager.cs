@@ -5,6 +5,7 @@ using FirMath;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FirUnityEditor;
+using Zenject;
 
 namespace Puzzle.FindObject
 {
@@ -42,8 +43,10 @@ namespace Puzzle.FindObject
         private float forseToIngredient;
         private float acceleration = 0.025f;
         public float ForseToIngredient { get => forseToIngredient; }
-        public ParticleSystem successParticleSystem { get => AllPuzzleHUB.SuccessParticleSystem; }
-        public ParticleSystem errorParticleSystem { get => AllPuzzleHUB.ErrorParticleSystem; }
+        [Inject]
+        public ParticleSystem successParticleSystem;
+        [Inject]
+        public ParticleSystem errorParticleSystem;
 
         [HideInInspector]
         public bool PointerOnRecipe;
@@ -54,6 +57,9 @@ namespace Puzzle.FindObject
         [SerializeField, NullCheck]
         private AnimationManager animationManager;
         #endregion
+
+        [Inject]
+        private CanvasManager canvasManager;
 
         protected void Awake()
         {
@@ -67,7 +73,7 @@ namespace Puzzle.FindObject
 
         public void ResetOptions()
         {
-            float screenOffset = CanvasManager.ScreenHeight / 2;
+            float screenOffset = canvasManager.ScreenHeight / 2;
             recipeOffset = recipeParent.sizeDelta.y - screenOffset;
         }
 

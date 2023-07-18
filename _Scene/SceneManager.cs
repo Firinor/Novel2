@@ -4,11 +4,14 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Zenject;
 
-public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
+public class SceneManager : MonoBehaviour, ILoadingManager
 {
-    private IScenePanel readingRoomScene => (IScenePanel)SceneHUB.ReadingRoomSceneManager;
-    private IScenePanel menuScene => (IScenePanel)SceneHUB.MenuSceneManager;
+    [Inject(Id = "ReadingRoom")]
+    private IScenePanel readingRoomScene;
+    [Inject(Id = "Menu")]
+    private IScenePanel menuScene;
 
     [SerializeField]
     private List<SceneMarks> currentSceneQueue;
@@ -16,14 +19,14 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
     private GameObject currentSceneGameObject;
 
     private SceneMarks sceneToLoad;
-    public static SceneMarks CurrentScene
+    public SceneMarks CurrentScene
     {
         get
         {
-            if (instance.currentSceneQueue.Count < 1)
+            if (currentSceneQueue.Count < 1)
                 return default;
 
-            return instance.currentSceneQueue[instance.currentSceneQueue.Count - 1];
+            return currentSceneQueue[currentSceneQueue.Count - 1];
         }
     }
     private Dictionary<SceneMarks, GameObject> scenesObject = new Dictionary<SceneMarks, GameObject>();
@@ -44,17 +47,20 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
     [SerializeField, NullCheck]
     private Transform mapParent;
 
+    [Inject]
+    private ISceneController dialogOperator;
+    [Inject]
+    private MemoryManager memoryManager;
+
+
     void Awake()
     {
-        if (!SingletoneCheck(this))
-            return;
+        //optionsOperator = optionsPanel.GetComponent<OptionsOperator>();
+        ////optionsOperator is disabled. Awake & Start procedures are not suitable
+        //optionsOperator.SingletoneCheck(optionsOperator);
 
-        optionsOperator = optionsPanel.GetComponent<OptionsOperator>();
-        //optionsOperator is disabled. Awake & Start procedures are not suitable
-        optionsOperator.SingletoneCheck(optionsOperator);
-
-        CanvasManager canvasManager = GetComponent<CanvasManager>();
-        canvasManager.SingletoneCheck(canvasManager);
+        //CanvasManager canvasManager = GetComponent<CanvasManager>();
+        //canvasManager.SingletoneCheck(canvasManager);
 
         foreach (GameObject go in doNotDestroyOnLoad)
         {
@@ -66,19 +72,18 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
 
         SetSceneObject(CurrentScene, currentSceneGameObject);
 
-        MemoryManager.InitializeSceneDictionary(CurrentScene);
+        memoryManager.InitializeSceneDictionary(CurrentScene);
 
         CheckingTheScene();
 
-        MemoryManager.LoadScenes(LoadingQueue);
+        memoryManager.LoadScenes(LoadingQueue);
     }
 
-    public static void SetSceneObject(SceneMarks mark, GameObject gameObject)
+    public void SetSceneObject(SceneMarks mark, GameObject gameObject)
     {
-        if (instance == null)
-            return;
+        if(scenesObject == null)
+            scenesObject = new Dictionary<SceneMarks, GameObject>();
 
-        Dictionary<SceneMarks, GameObject> scenesObject = instance.scenesObject;
         if (scenesObject.ContainsKey(mark))
         {
             scenesObject[mark] = gameObject;
@@ -89,15 +94,15 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
         }
     }
 
-    public static void SetSceneToPosition(GameObject gameObject, ScenePosition position)
+    public void SetSceneToPosition(GameObject gameObject, ScenePosition position)
     {
         switch (position)
         {
             case ScenePosition.MapPosition:
-                gameObject.transform.SetParent(instance.mapParent);
+                gameObject.transform.SetParent(mapParent);
                 break;
             case ScenePosition.PuzzlePosition:
-                gameObject.transform.SetParent(instance.puzzleParent);
+                gameObject.transform.SetParent(puzzleParent);
                 break;
         }
     }
@@ -114,19 +119,19 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
     //    }
     //}
 
-    public static void LoadScene(SceneMarks scene)
+    public void LoadScene(SceneMarks scene)
     {
-        instance.sceneToLoad = scene;
+        sceneToLoad = scene;
 
-        if(!instance.TheSceneHasLoaded())
-            MemoryManager.LoadScene(scene);
+        if(!TheSceneHasLoaded())
+            memoryManager.LoadScene(scene);
 
-        instance.loadingTransitionOperator.CurtainDown();
+        loadingTransitionOperator.CurtainDown();
     }
 
     public bool TheSceneHasLoaded()
     {
-        return MemoryManager.isSceneIsReady(sceneToLoad);
+        return memoryManager.isSceneIsReady(sceneToLoad);
     }
 
     //public void SetAllowSceneActivation(bool v)
@@ -143,14 +148,14 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
         AddSceneToQueue(sceneToLoad);
     }
 
-    public static void AddSceneToQueue(SceneMarks sceneToLoad)
+    public void AddSceneToQueue(SceneMarks sceneToLoad)
     {
-        instance.currentSceneQueue.Add(sceneToLoad);
+        currentSceneQueue.Add(sceneToLoad);
     }
 
-    public static void SwitchPanel(SceneDirection direction)
+    public void SwitchPanel(SceneDirection direction)
     {
-        instance.SwitchPanels(direction);
+        SwitchPanels(direction);
     }
 
     public void SwitchPanels(SceneDirection direction)
@@ -158,14 +163,14 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
         switch (direction)
         {
             case SceneDirection.options:
-                instance.optionsPanel.SetActive(true);
+                optionsPanel.SetActive(true);
                 break;
             case SceneDirection.exit:
                 DiactiveAllPanels();
                 ExitAction();
                 break;
             case SceneDirection.basic:
-                SceneMarks currentScene = instance.currentSceneQueue[instance.currentSceneQueue.Count - 1];
+                SceneMarks currentScene = currentSceneQueue[currentSceneQueue.Count - 1];
                 if (currentScene == SceneMarks.readingRoom || currentScene == SceneMarks.puzzles)
                 {
                     readingRoomScene.BasicPanelSettings();
@@ -180,13 +185,13 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
         }
     }
 
-    private static void ExitAction()
+    private void ExitAction()
     {
-        int queueSceneIndex = instance.currentSceneQueue.Count - 1;
+        int queueSceneIndex = currentSceneQueue.Count - 1;
         if(queueSceneIndex < 0)
             throw new Exception("Error on exit button!");
 
-        SceneMarks currentScene = instance.currentSceneQueue[queueSceneIndex];
+        SceneMarks currentScene = currentSceneQueue[queueSceneIndex];
         if (currentScene == SceneMarks.readingRoom || currentScene == SceneMarks.puzzles)
         {
             //LoadScene("MainMenu");//
@@ -201,18 +206,18 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
         }
         else
         {
-            instance.scenesObject[currentScene].SetActive(false);
+            scenesObject[currentScene].SetActive(false);
         }
     }
 
-    public static void DiactiveAllPanels()
+    public void DiactiveAllPanels()
     {
-        instance.optionsPanel.SetActive(false);
+        optionsPanel.SetActive(false);
     }
 
-    public static void CheckingTheScene()
+    public void CheckingTheScene()
     {
-        SceneMarks currentScene = instance.currentSceneQueue[instance.currentSceneQueue.Count - 1];
+        SceneMarks currentScene = currentSceneQueue[currentSceneQueue.Count - 1];
         if (currentScene == SceneMarks.readingRoom || currentScene == SceneMarks.puzzles
             || currentScene == SceneMarks.menu)
         {
@@ -229,12 +234,8 @@ public class SceneManager : SinglBehaviour<SceneManager>, ILoadingManager
         }
     }
 
-    public static void SkipButton()
+    public void SkipButton()
     {
-        if (!DialogHUB.DialogOperatorCell.isValueNull())
-        {
-            ISceneController dialogOperator = (ISceneController)DialogHUB.DialogOperator;
-            dialogOperator.Skip();
-        }
+        dialogOperator.Skip();
     }
 }

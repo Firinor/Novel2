@@ -3,72 +3,41 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Puzzle
 {
     public abstract class PuzzleOperator : MonoBehaviour
     {
-        public Image background { get => BackgroundHUB.Image; }
+        [Inject]
+        public Image background;
 
         [SerializeField]
         protected float leftTime = 120;
         protected bool theTimerIsRunning;
 
-        public GameObject HelpButtons { get => AllPuzzleHUB.HelpButtons; }
-        
+        [Inject]
+        public GameObject HelpButtons;
+        [Inject]
         private Button exitButton;
-        public Button ExitButton
-        {
-            get
-            {
-                if (exitButton == null)
-                    exitButton = AllPuzzleHUB.ExitButton.GetComponent<Button>();
-                
-                return exitButton;
-            }
-        }
-        
+        [Inject]
         private Button optionsButton;
-        public Button OptionsButton
-        {
-            get
-            {
-                if (optionsButton == null)
-                    optionsButton = AllPuzzleHUB.OptionsButton.GetComponent<Button>();
-
-                return optionsButton;
-            }
-        }
-        
+        [Inject]
         private Button skipButton;
-        public Button SkipButton
-        {
-            get
-            {
-                if (skipButton == null)
-                    skipButton = AllPuzzleHUB.SkipButton.GetComponent<Button>();
-
-                return skipButton;
-            }
-        }
-        
+        [Inject]
         private Button bookButton;
-        public Button BookButton
-        {
-            get
-            {
-                if (bookButton == null)
-                    bookButton = AllPuzzleHUB.BookButton.GetComponent<Button>();
+        [Inject]
+        public GameObject FailButton;
+        [Inject]
+        public GameObject VictoryButton;
+        [Inject]
+        public GameObject RetryButton;
 
-                return bookButton;
-            }
-        }
+        [Inject]
+        public TextMeshProUGUI TimerText;
 
-        public GameObject FailButton { get => AllPuzzleHUB.FailButton; }
-        public GameObject VictoryButton { get => AllPuzzleHUB.VictoryButton; }
-        public GameObject RetryButton { get => AllPuzzleHUB.RetryButton; }
-
-        public TextMeshProUGUI TimerText { get => AllPuzzleHUB.TimerText; }
+        [Inject]
+        public PuzzleManager puzzleManager;
 
         protected virtual void OnEnable()
         {
@@ -78,14 +47,14 @@ namespace Puzzle
         private void PreparePuzzle()
         {
             HelpButtons.SetActive(true);
-            SkipButton.onClick.RemoveAllListeners();
-            SkipButton.onClick.AddListener(SuccessfullySolvePuzzle);
-            BookButton.onClick.RemoveAllListeners();
-            BookButton.onClick.AddListener(OpenHelpBook);
-            ExitButton.onClick.RemoveAllListeners();
-            ExitButton.onClick.AddListener(PuzzleExit);
-            OptionsButton.onClick.RemoveAllListeners();
-            OptionsButton.onClick.AddListener(Options);
+            skipButton.onClick.RemoveAllListeners();
+            skipButton.onClick.AddListener(SuccessfullySolvePuzzle);
+            bookButton.onClick.RemoveAllListeners();
+            bookButton.onClick.AddListener(OpenHelpBook);
+            exitButton.onClick.RemoveAllListeners();
+            exitButton.onClick.AddListener(PuzzleExit);
+            optionsButton.onClick.RemoveAllListeners();
+            optionsButton.onClick.AddListener(Options);
             SetRetryEvent();
             ResetTimer();
         }
@@ -104,7 +73,7 @@ namespace Puzzle
         }
         public virtual void Options()
         {
-            PuzzleManager.Options();
+            puzzleManager.Options();
         }
         public virtual void OpenHelpBook()
         {

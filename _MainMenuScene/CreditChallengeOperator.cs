@@ -1,10 +1,14 @@
 using FirEnum;
 using UnityEngine;
+using Zenject;
 
 public class CreditChallengeOperator : MonoBehaviour
 {
+    [Inject]
+    private MainMenuManager mainMenuManager;
+
     public void Return()
     {
-        MainMenuManager.SwitchPanels(MenuMarks.baner);
+        mainMenuManager.SwitchPanels(MenuMarks.baner);
     }
 }

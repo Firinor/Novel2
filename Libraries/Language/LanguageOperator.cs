@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class LanguageOperator : MonoBehaviour
@@ -7,6 +8,9 @@ public class LanguageOperator : MonoBehaviour
     [SerializeField]
     private string Key;
     protected TextMeshProUGUI Text;
+
+    [Inject]
+    private LanguageInformator languageInformator;
 
     void Awake()
     {
@@ -24,8 +28,8 @@ public class LanguageOperator : MonoBehaviour
 
     protected virtual void SetText()
     {
-        Text.font = LanguageInformator.GetFont();
-        string text = LanguageInformator.GetText(Key);
+        Text.font = languageInformator.GetFont();
+        string text = languageInformator.GetText(Key);
         if(text != null)
             Text.text = text;
     }

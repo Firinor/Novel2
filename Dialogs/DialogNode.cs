@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public enum DialogProgressStatus { Open, Closed, Hiden }
 
@@ -15,14 +16,18 @@ namespace Dialog
         protected List<DialogNode> Choices;
         private DialogProgressStatus dialogProgressStatus = DialogProgressStatus.Hiden;
 
-        protected static DialogOperator dialogOperator => (DialogOperator)DialogHUB.DialogOperator;
-        
+        [Inject]
+        protected DialogManager dialogManager;
+        [Inject]
+        protected DialogOperator dialogOperator;
+        [Inject]
+        protected StoryInformator storyInformator;
+
         protected StoryInformator.Characters Characters;
         protected StoryInformator.Backgrounds Backgrounds;
 
         protected void Awake()
         {
-            StoryInformator storyInformator = StoryInformator.instance;
             Characters = storyInformator.characters;
             Backgrounds = storyInformator.backgrounds;
             GetComponent<Button>().onClick.AddListener(StartDialog);
@@ -40,7 +45,7 @@ namespace Dialog
         }
         public virtual void StartDialog()
         {
-            DialogManager.ActivateDialog(GetComponent<RectTransform>());
+            dialogManager.ActivateDialog(GetComponent<RectTransform>());
             dialogOperator.CleareAll();
             dialogOperator.SetSceneName(name);
         }

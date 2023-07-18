@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using Zenject;
 
-public class OptionsOperator : SinglBehaviour<OptionsOperator>, IOptionsOperator
+public class OptionsOperator : MonoBehaviour, IOptionsOperator
 {
     [SerializeField]
     private AudioMixerGroup mixerMasterGroup;
@@ -12,6 +13,9 @@ public class OptionsOperator : SinglBehaviour<OptionsOperator>, IOptionsOperator
     private AnimationCurve curve;
     [SerializeField]
     private IScenePanel scenePanel;
+
+    [Inject]
+    private SaveManager saveManager;
 
     private static bool OnLoad;
 
@@ -30,7 +34,7 @@ public class OptionsOperator : SinglBehaviour<OptionsOperator>, IOptionsOperator
         OptionsManager.FullScreen = v;
 
         if (!OnLoad)
-            SaveManager.SaveOptions();
+            saveManager.SaveOptions();
     }
     public void ScreenResolution(Dropdown dropdown)
     {
@@ -38,31 +42,23 @@ public class OptionsOperator : SinglBehaviour<OptionsOperator>, IOptionsOperator
         OptionsManager.CurrentScreenResolution = OptionsManager.GetResolution(i);
 
         if (!OnLoad)
-            SaveManager.SaveOptions(ScreenResolution: i);
+            saveManager.SaveOptions(ScreenResolution: i);
     }
     public void MasterVolume()
     {
-        if (instance == null)
-            return;
-
         float volume = Mathf.Lerp(-80f, 0, curve.Evaluate(GetVolume()));
 
         mixerMasterGroup.audioMixer.SetFloat("MasterVolume", volume);
         if (!OnLoad)
-            SaveManager.SaveOptions();
+            saveManager.SaveOptions();
     }
-    public static float GetVolume()
+    public float GetVolume()
     {
-        if (instance == null)
-            return default;
-
         //volumeSlider minValue = -1, minValue = 1
-        return instance.volumeSlider.value / 2 + .5f;
+        return volumeSlider.value / 2 + .5f;
     }
     public void Language(Dropdown dropdown)
     {
-        if (instance == null)
-            return;
         Languages language = (Languages)dropdown.value;
         if(PlayerManager.Language != language)
         {
@@ -71,19 +67,16 @@ public class OptionsOperator : SinglBehaviour<OptionsOperator>, IOptionsOperator
             
 
         if (!OnLoad)
-            SaveManager.SaveOptions();
+            saveManager.SaveOptions();
     }
 
     public OptionsParameters GetParameters(int ScreenResolutoin = -1)
     {
-        return new OptionsParameters(OptionsManager.FullScreen, ScreenResolutoin, instance.volumeSlider.value, 0);
+        return new OptionsParameters(OptionsManager.FullScreen, ScreenResolutoin, volumeSlider.value, 0);
     }
 
     public void LoadOptions()
     {
-        if (instance == null)
-            return;
-
         OnLoad = true;
         //var parametrs = SaveManager.LoadOptions();
         //instance.fullScreen = parametrs.fullScreen;

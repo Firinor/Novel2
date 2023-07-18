@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using Zenject;
 
 namespace Puzzle.FindDifferences
 {
@@ -44,6 +45,9 @@ namespace Puzzle.FindDifferences
 
         private CompositeDisposable disposables;
         #endregion
+
+        [Inject]
+        private CanvasManager canvasManager;
 
         protected void Awake()
         {
@@ -160,7 +164,7 @@ namespace Puzzle.FindDifferences
 
         public void Particles(bool success, CursorOnEvidence cursorOnEvidence)
         {
-            Particles(success, Input.mousePosition/CanvasManager.ScaleFactor, cursorOnEvidence);
+            Particles(success, Input.mousePosition/canvasManager.ScaleFactor, cursorOnEvidence);
         }
         public void Particles(bool success, Vector3 position, CursorOnEvidence cursorOnEvidence)
         {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
 
 public enum AudioType { Button, HeroCard, Background, Unit }
 
@@ -13,9 +14,12 @@ public class AudioSourceOperator : MonoBehaviour, IPointerEnterHandler, IPointer
     [SerializeField]
     private AudioType audioType;
 
+    [Inject]
+    private SoundInformator soundInformator;
+
     void Awake()
     {
-        audioClips = SoundInformator.GetClips(audioType);
+        audioClips = soundInformator.GetClips(audioType);
         if (audioType == AudioType.Background)
         {
             audioSource = GetAudioSource();

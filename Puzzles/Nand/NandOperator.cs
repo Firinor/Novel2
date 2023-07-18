@@ -2,6 +2,7 @@ using FirUnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Puzzle.Nand
 {
@@ -30,6 +31,9 @@ namespace Puzzle.Nand
         private bool? outSignal = true;
 
         private Vector3 startMousePosition;
+
+        [Inject]
+        private CanvasManager canvasManager;
 
         private void Awake()
         {
@@ -63,7 +67,7 @@ namespace Puzzle.Nand
         public void OnBeginDrag(PointerEventData eventData)
         {
             SetRayCastActivity(false);
-            startMousePosition = Input.mousePosition / CanvasManager.ScaleFactor - transform.localPosition;
+            startMousePosition = Input.mousePosition / canvasManager.ScaleFactor - transform.localPosition;
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 drag = true;
@@ -78,7 +82,7 @@ namespace Puzzle.Nand
             if (drag && eventData.button == PointerEventData.InputButton.Left)
             {
                 transform.localPosition
-                    = Input.mousePosition / CanvasManager.ScaleFactor - startMousePosition;
+                    = Input.mousePosition / canvasManager.ScaleFactor - startMousePosition;
             }
 
             signalInputA.OnMoveAction();

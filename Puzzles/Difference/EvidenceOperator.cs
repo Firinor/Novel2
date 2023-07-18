@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Puzzle.FindDifferences
 {
@@ -25,6 +26,9 @@ namespace Puzzle.FindDifferences
         [SerializeField]
         private RectTransform evidencesRectTransform;
         private Vector2 startOfImage;
+
+        [Inject]
+        private CanvasManager canvasManager;
 
         void Awake()
         {
@@ -58,7 +62,7 @@ namespace Puzzle.FindDifferences
         {
             Vector2 evidences = evidencesRectTransform.anchoredPosition;
             detectiveDeskOperator.CheckTheEvidence(
-                eventData.position/CanvasManager.ScaleFactor - startOfImage - evidences, cursorOnEvidence);
+                eventData.position/canvasManager.ScaleFactor - startOfImage - evidences, cursorOnEvidence);
         }
 
         public void DisableImage()

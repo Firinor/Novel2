@@ -2,7 +2,7 @@ using FirUnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoadingTransitionOperator : SinglBehaviour<LoadingTransitionOperator>
+public class LoadingTransitionOperator : MonoBehaviour
 {
     [SerializeField, NullCheck]
     private GameObject sceneManagerObject;
@@ -28,7 +28,6 @@ public class LoadingTransitionOperator : SinglBehaviour<LoadingTransitionOperato
 
     void Awake()
     {
-        SingletoneCheck(this);
         sceneManager = sceneManagerObject.GetComponent<ILoadingManager>();
         space = GetComponentInChildren<Image>();
         space.sprite = spaceSprite;

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Puzzle.FindDifferences
 {
@@ -45,6 +46,9 @@ namespace Puzzle.FindDifferences
         [SerializeField]
         private float screenHeightRatio = 0.9f;//pixels
 
+        [Inject]
+        private CanvasManager canvasManager;
+
         public void DisableButton()
         {
             ButtonStatus(false);
@@ -70,8 +74,8 @@ namespace Puzzle.FindDifferences
         {
             differences = new Dictionary<GameObject, Rect>();
 
-            float canvas_x = (CanvasManager.ScreenWidth * screenWidthRatio - offset * 3) / 2;//left, center, right (2 images in a row)
-            float canvas_y = CanvasManager.ScreenHeight * screenHeightRatio - offset * 2;//top, bottom (1 image on collum)
+            float canvas_x = (canvasManager.ScreenWidth * screenWidthRatio - offset * 3) / 2;//left, center, right (2 images in a row)
+            float canvas_y = canvasManager.ScreenHeight * screenHeightRatio - offset * 2;//top, bottom (1 image on collum)
 
             Sprite mainSprite = imageWithDifferences.Sprite;
             float image_x = mainSprite.textureRect.width;

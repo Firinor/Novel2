@@ -3,17 +3,17 @@ using FirSaveLoad;
 using System.Collections.Generic;
 using UnityEngine;
 using static FirSaveLoad.GlobalSaveManager;
+using Zenject;
 
-public class SaveManager : SinglBehaviour<SaveManager>
+public class SaveManager : MonoBehaviour
 {
-    [SerializeField, NullCheck]
+    [Inject]
     private OptionsOperator optionsOperator;
 
     public static SaveData Data;
 
     void Awake()
     {
-        SingletoneCheck(this);
         optionsOperator.LoadOptions();
     }
 
@@ -39,10 +39,10 @@ public class SaveManager : SinglBehaviour<SaveManager>
     }
 
 
-    public static void SaveOptions(int ScreenResolution = -1)
+    public void SaveOptions(int ScreenResolution = -1)
     {
         Save<OptionsParameters>(GlobalSaveManager.GetOptionPath(),
-            instance.optionsOperator.GetParameters(ScreenResolutoin: ScreenResolution));
+            optionsOperator.GetParameters(ScreenResolutoin: ScreenResolution));
     }
 
     [System.Serializable]

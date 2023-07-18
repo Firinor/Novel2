@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CanvasManager : SinglBehaviour<CanvasManager>
+public class CanvasManager : MonoBehaviour
 {
     [SerializeField]
     private Canvas mainCanvas;
     [SerializeField]
     private CanvasScaler mainCanvasScaler;
 
-    public static float ScreenHeight { get => instance.mainCanvasScaler.referenceResolution.y; }
-    public static float ScreenWidth { get => instance.mainCanvas.renderingDisplaySize.x / instance.mainCanvas.scaleFactor; }
-    public static float ScaleFactor { get => instance.mainCanvas.scaleFactor; }
+    public float ScreenHeight { get => mainCanvasScaler.referenceResolution.y; }
+    public float ScreenWidth { get => mainCanvas.renderingDisplaySize.x / mainCanvas.scaleFactor; }
+    public float ScaleFactor { get => mainCanvas.scaleFactor; }
 }
