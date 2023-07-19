@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
 
-
-
 public class MemoryManager
 {
     private Dictionary<SceneMarks, bool> scenesInGame;
