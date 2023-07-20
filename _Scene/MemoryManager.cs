@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using Zenject;
 using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
 
 public class MemoryManager
 {
     private Dictionary<SceneMarks, bool> scenesInGame;
     private AsyncOperation operation;
+    [Inject]
     private GIFanimation loadingGIF;
 
     public void InitializeSceneDictionary(SceneMarks currentScene)

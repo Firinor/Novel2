@@ -8,10 +8,10 @@ using Zenject;
 
 public class SceneManager : MonoBehaviour, ILoadingManager
 {
-    [Inject(Id = "ReadingRoom")]
-    private IScenePanel readingRoomScene;
-    [Inject(Id = "Menu")]
-    private IScenePanel menuScene;
+    //[Inject(Id = "ReadingRoom")]
+    //private IScenePanel readingRoomScene;
+    //[Inject(Id = "Menu")]
+    //private IScenePanel menuScene;
 
     [SerializeField]
     private List<SceneMarks> currentSceneQueue;
@@ -47,8 +47,8 @@ public class SceneManager : MonoBehaviour, ILoadingManager
     [SerializeField, NullCheck]
     private Transform mapParent;
 
-    [Inject]
-    private ISceneController dialogOperator;
+    //[Inject]
+    //private ISceneController dialogOperator;
     [Inject]
     private MemoryManager memoryManager;
 
@@ -73,8 +73,6 @@ public class SceneManager : MonoBehaviour, ILoadingManager
         SetSceneObject(CurrentScene, currentSceneGameObject);
 
         memoryManager.InitializeSceneDictionary(CurrentScene);
-
-        CheckingTheScene();
 
         memoryManager.LoadScenes(LoadingQueue);
     }
@@ -173,11 +171,11 @@ public class SceneManager : MonoBehaviour, ILoadingManager
                 SceneMarks currentScene = currentSceneQueue[currentSceneQueue.Count - 1];
                 if (currentScene == SceneMarks.readingRoom || currentScene == SceneMarks.puzzles)
                 {
-                    readingRoomScene.BasicPanelSettings();
+                    //readingRoomScene.BasicPanelSettings();
                 }
                 else if (currentScene == SceneMarks.menu)
                 {
-                    menuScene.BasicPanelSettings();
+                    //menuScene.BasicPanelSettings();
                 }
                 break;
             default:
@@ -215,27 +213,8 @@ public class SceneManager : MonoBehaviour, ILoadingManager
         optionsPanel.SetActive(false);
     }
 
-    public void CheckingTheScene()
-    {
-        SceneMarks currentScene = currentSceneQueue[currentSceneQueue.Count - 1];
-        if (currentScene == SceneMarks.readingRoom || currentScene == SceneMarks.puzzles
-            || currentScene == SceneMarks.menu)
-        {
-            //ISceneController.SetAllInstance();
-        }
-        else if (currentScene == SceneMarks.findObject
-            || currentScene == SceneMarks.tetraQuestion)
-        {
-            return;
-        }
-        else
-        {
-            throw new Exception("Error on checking scene!");
-        }
-    }
-
     public void SkipButton()
     {
-        dialogOperator.Skip();
+        //dialogOperator.Skip();
     }
 }
